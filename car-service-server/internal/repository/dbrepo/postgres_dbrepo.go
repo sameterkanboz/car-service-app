@@ -69,7 +69,7 @@ func (m *PostgresDBRepo) AllAppointments() ([]*models.Appointment, error) {
 
 	query := `
 		SELECT
-			id, customer_id, mechanic_id, car_id, appointment_date, created_at, updated_at
+			id, customer_id, mechanic_id, car_id, appointment_date, appointment_type, appointment_status,created_at, updated_at
 		FROM
 			appointments
 		ORDER BY
@@ -91,6 +91,8 @@ func (m *PostgresDBRepo) AllAppointments() ([]*models.Appointment, error) {
 			&appointment.MechanicID,
 			&appointment.CarID,
 			&appointment.AppointmentDate,
+			&appointment.AppointmentType,
+			&appointment.AppointmentStatus,
 			&appointment.CreatedAt,
 			&appointment.UpdatedAt,
 		)
@@ -102,4 +104,4 @@ func (m *PostgresDBRepo) AllAppointments() ([]*models.Appointment, error) {
 	return appointments, nil
 }
 
-func (m *PostgresDBRepo) AllUsers() []*models.Customer
+// func (m *PostgresDBRepo) AllUsers() []*models.Customer
