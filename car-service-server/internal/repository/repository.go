@@ -1,0 +1,12 @@
+package repository
+
+import (
+	"database/sql"
+	"server/internal/models"
+)
+
+type DatabaseRepo interface {
+	Connection() *sql.DB
+	AllTodos() ([]*models.ToDo, error)
+	AllAppointments() ([]*models.Appointment, error)
+}
