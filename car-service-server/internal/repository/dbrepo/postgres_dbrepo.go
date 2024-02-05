@@ -104,4 +104,35 @@ func (m *PostgresDBRepo) AllAppointments() ([]*models.Appointment, error) {
 	return appointments, nil
 }
 
-// func (m *PostgresDBRepo) AllUsers() []*models.Customer
+func (m *PostgresDBRepo) GetUserByEmail(email string) (*models.User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	query := `
+			SELECT 
+				id, username, first_name, last_name, email, password, role, car_id, created_at, updated_at 
+			FROM 
+				users 
+			WHERE email = $1`
+	var user models.User
+	row := m.DB.QueryRowContext(ctx, query, email)
+
+	err := row.Scan(
+		&user.ID,
+		&user.Username,
+		&user.FirstName,
+		&user.LastName,
+		&user.Email,
+		&user.Password,
+		&user.Role,
+		&user.CarID,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}

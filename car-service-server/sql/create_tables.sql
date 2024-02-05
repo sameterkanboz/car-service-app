@@ -31,7 +31,7 @@ CREATE TABLE public.users (
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     role VARCHAR(20) NOT NULL, -- Role can be 'customer', 'mechanic', or 'admin'
-    name VARCHAR(255),
+    first_name VARCHAR(255),
     last_name VARCHAR(255),
     car_id INTEGER REFERENCES public.cars(id),
     appointments JSONB,
@@ -51,7 +51,7 @@ INSERT INTO public.cars (model, brand, type, year, color, plate, issues) VALUES
     ('Accord', 'Honda', 'Sedan', 2020, 'Blue', 'DEF456', '["Brake problem", "Alignment issue"]'),
     ('Fusion', 'Ford', 'Sedan', 2019, 'Black', 'GHI789', '["Tire issue", "AC problem"]');
 
-INSERT INTO public.users (username, email, password, role, name, last_name, car_id, appointments) VALUES
+INSERT INTO public.users (username, email, password, role, first_name, last_name, car_id, appointments) VALUES
     ('customer1', 'customer1@example.com', '$2a$14$wVsaPvJnJJsomWArouWCtusem6S/.Gauq/GjOIEHpyh2DAMmso1wy', 'customer', 'John', 'Doe', 1, '[{"id": 1, "mechanic_id": 2, "car_id": 1, "appointment_date": "2024-02-10T09:00:00", "appointment_type": "Oil Change"}]'),
     ('mechanic1', 'mechanic1@example.com', '$2a$14$wVsaPvJnJJsomWArouWCtusem6S/.Gauq/GjOIEHpyh2DAMmso1wy', 'mechanic', NULL, NULL, NULL, '[{"id": 1, "customer_id": 1, "car_id": 1, "appointment_date": "2024-02-10T09:00:00", "appointment_type": "Oil Change"}]'),
     ('admin', 'admin@example.com', '$2a$14$wVsaPvJnJJsomWArouWCtusem6S/.Gauq/GjOIEHpyh2DAMmso1wy', 'admin', NULL, NULL, NULL, NULL);

@@ -2,12 +2,13 @@ import { StatusBar } from 'expo-status-bar';
 import { Platform, Text, View } from 'react-native';
 
 import EditScreenInfo from '../components/edit-screen-info';
+import { useAuth } from './context/AuthContext';
 
 export default function ModalScreen() {
   return (
     <View className={styles.container}>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-      <Text className={styles.title}>Modal</Text>
+      <Text className={styles.title}>modal</Text>
       <View className={styles.separator} />
       <EditScreenInfo path="app/modal.tsx" />
     </View>
