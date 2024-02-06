@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
+import { useAuth } from '~/app/context/AuthContext';
 // import { Image } from 'expo-image';
 
 const shape = `
@@ -12,12 +13,13 @@ const shape = `
  `;
 
 const Landing = () => {
+  const { authState } = useAuth();
   return (
     <View>
       <View style={{ alignItems: 'center' }}>
         <View style={{ position: 'absolute', zIndex: 1, left: 32, top: 64 }}>
           <Text style={{ fontSize: 24 }}>%%time</Text>
-          <Text style={{ fontSize: 24 }}>%%name+%%last name</Text>
+          <Text style={{ fontSize: 24 }}>{}</Text>
         </View>
 
         <SvgXml style={{ top: 40 }} xml={shape} />

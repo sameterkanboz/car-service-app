@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 interface AuthProps {
   authState?: { token: string | null; authenticated: boolean | null };
@@ -10,7 +10,7 @@ interface AuthProps {
 }
 
 const TOKEN_KEY = 'my-jwt';
-export const API_URL = 'https://3a29-2a02-e0-5e7e-4600-90e5-4c96-7326-3670.ngrok-free.app';
+export const API_URL = 'https://bc7f-2a02-e0-5e7e-4600-b9af-ddaa-36af-5627.ngrok-free.app';
 const AuthContext = createContext<AuthProps>({});
 
 export const useAuth = () => {

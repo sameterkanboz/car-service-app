@@ -4,6 +4,10 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"server/internal/models"
+	"strconv"
+
+	"github.com/golang-jwt/jwt/v4"
 )
 
 func (app *application) Home(w http.ResponseWriter, r *http.Request) {
@@ -13,7 +17,7 @@ func (app *application) Home(w http.ResponseWriter, r *http.Request) {
 		Version string `json:"version"`
 	}{
 		Status:  "active",
-		Message: "Go Movies up and running",
+		Message: "Car Service API is active!",
 		Version: "1.0.0",
 	}
 
@@ -72,6 +76,7 @@ func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
 		ID:        user.ID,
 		FirstName: user.FirstName,
 		LastName:  user.LastName,
+		Role:      user.Role,
 	}
 
 	tokens, err := app.auth.GenerateTokenPair(&u)
@@ -84,4 +89,84 @@ func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, refreshCookie)
 
 	app.writeJSON(w, http.StatusAccepted, tokens)
+}
+
+func (app *application) refreshToken(w http.ResponseWriter, r *http.Request) {
+
+	for _, cookie := range r.Cookies() {
+		if cookie.Name == app.auth.CookieName {
+			claims := &Claims{}
+			refreshToken := cookie.Value
+
+			_, err := jwt.ParseWithClaims(refreshToken, claims, func(token *jwt.Token) (interface{}, error) {
+				return []byte(app.JWTSecret), nil
+			})
+			if err != nil {
+				app.errorJSON(w, errors.New("unauthorized"), http.StatusUnauthorized)
+				return
+			}
+
+			userID, err := strconv.Atoi(claims.Subject)
+			if err != nil {
+				app.errorJSON(w, errors.New("unknown user"), http.StatusUnauthorized)
+				return
+			}
+
+			user, err := app.DB.GetUserByID(userID)
+			if err != nil {
+				app.errorJSON(w, errors.New("unknown user"), http.StatusUnauthorized)
+				return
+			}
+
+			u := jwtUser{
+				ID:        user.ID,
+				FirstName: user.FirstName,
+				LastName:  user.LastName,
+				Role:      user.Role,
+			}
+
+			tokenPairs, err := app.auth.GenerateTokenPair(&u)
+			if err != nil {
+				app.errorJSON(w, errors.New("error generating token"), http.StatusUnauthorized)
+				return
+			}
+
+			http.SetCookie(w, app.auth.GetRefreshCookie(tokenPairs.RefreshToken))
+		}
+	}
+}
+
+func (app *application) logout(w http.ResponseWriter, r *http.Request) {
+	// logout user
+	// delete refresh token
+	// set cookie to expire
+	http.SetCookie(w, app.auth.GetExpiredRefreshCookie())
+	w.WriteHeader(http.StatusAccepted)
+}
+
+func (app *application) AllUsers(w http.ResponseWriter, r *http.Request) {
+	users, err := app.DB.AllUsers()
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+	_ = app.writeJSON(w, http.StatusOK, users)
+}
+
+// ALL CARS, ALL APPOINTMENTS TODO
+
+func (app *application) CreateUser(w http.ResponseWriter, r *http.Request) {
+	var user models.User
+	err := app.readJSON(w, r, &user)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+	id, err := app.DB.CreateUser(&user)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+	log.Println("User created with ID: ", id)
+	app.writeJSON(w, http.StatusCreated, id)
 }

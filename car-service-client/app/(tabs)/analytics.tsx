@@ -1,9 +1,6 @@
 import { Button, Text, TextInput, View } from 'react-native';
 
-import EditScreenInfo from '../../components/edit-screen-info';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 type Appointments = {
   appointment_type: number;

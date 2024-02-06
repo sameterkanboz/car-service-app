@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"server/internal/models"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type PostgresDBRepo struct {
@@ -61,6 +63,55 @@ func (m *PostgresDBRepo) AllTodos() ([]*models.ToDo, error) {
 	}
 
 	return todos, nil
+}
+
+func (m *PostgresDBRepo) AllUsers() ([]*models.User, error) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	query := `
+		SELECT
+			id, username, email, password, role, first_name, last_name, car_id, appointments, created_at, updated_at
+		FROM
+			users
+		ORDER BY
+			username
+	`
+
+	rows, err := m.DB.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var users []*models.User
+
+	for rows.Next() {
+		var user models.User
+		err := rows.Scan(
+			&user.ID,
+			&user.Username,
+			&user.Email,
+			&user.Password,
+			&user.Role,
+			&user.FirstName,
+			&user.LastName,
+			&user.CarID,
+			&user.Appointments,
+			&user.CreatedAt,
+			&user.UpdatedAt,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, &user)
+	}
+
+	return users, nil
 }
 
 func (m *PostgresDBRepo) AllAppointments() ([]*models.Appointment, error) {
@@ -135,4 +186,72 @@ func (m *PostgresDBRepo) GetUserByEmail(email string) (*models.User, error) {
 	}
 
 	return &user, nil
+}
+
+func (m *PostgresDBRepo) GetUserByID(id int) (*models.User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	query := `
+			SELECT 
+				id, username, first_name, last_name, email, password, role, car_id, created_at, updated_at 
+			FROM 
+				users 
+			WHERE id = $1`
+	var user models.User
+	row := m.DB.QueryRowContext(ctx, query, id)
+
+	err := row.Scan(
+		&user.ID,
+		&user.Username,
+		&user.FirstName,
+		&user.LastName,
+		&user.Email,
+		&user.Password,
+		&user.Role,
+		&user.CarID,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (m *PostgresDBRepo) CreateUser(user *models.User) (int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return 0, err
+	}
+
+	query := `
+		INSERT INTO users (username, first_name, last_name, email, password, role, created_at, updated_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+		RETURNING id`
+
+	var newID int
+	err = m.DB.QueryRowContext(
+		ctx,
+		query,
+		user.Username,
+		user.FirstName,
+		user.LastName,
+		user.Email,
+		hashedPassword, // Hashlenmiş parolayı kullan
+		user.Role,
+		time.Now(),
+		time.Now(),
+	).Scan(&newID)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return newID, nil
 }
