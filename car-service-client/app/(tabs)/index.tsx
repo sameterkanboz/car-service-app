@@ -1,10 +1,7 @@
-import { Pressable, ScrollView, Text, View, StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-import EditScreenInfo from '../../components/edit-screen-info';
 import Header from '~/components/home/header';
 import Landing from '~/components/home/landing';
-import { Link } from 'expo-router';
-import { FontAwesome } from '@expo/vector-icons';
 
 export default function HomeScreen() {
   return (

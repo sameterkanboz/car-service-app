@@ -14,7 +14,7 @@ type Appointments = {
   customer_id: number;
   mechanic_id: number;
 };
-export default function AnalyticsScreen() {
+export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState({
@@ -28,6 +28,7 @@ export default function AnalyticsScreen() {
     if (onLogin) {
       const result = await onLogin(email, password);
       setError({ message: '', error: false });
+      router.replace('/(tabs)/');
       if (result && result.error) {
         console.log(result.message);
         setError({ message: result.message, error: true });
