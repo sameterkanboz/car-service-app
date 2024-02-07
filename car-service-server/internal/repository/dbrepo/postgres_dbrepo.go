@@ -225,17 +225,65 @@ func (m *PostgresDBRepo) GetUserByID(id int) (*models.User, error) {
 	return &user, nil
 }
 
+func (m *PostgresDBRepo) GetUserByUserName(username string) (*models.User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+	query := `
+	SELECT 
+		id, username, first_name, last_name, email, password, role, car_id, created_at, updated_at 
+	FROM 
+		users 
+	WHERE username = $1`
+
+	var user models.User
+
+	row := m.DB.QueryRowContext(ctx, query, username)
+	err := row.Scan(
+		&user.ID,
+		&user.Username,
+		&user.FirstName,
+		&user.LastName,
+		&user.Email,
+		&user.Password,
+		&user.Role,
+		&user.CarID,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
+	switch {
+	case err == sql.ErrNoRows:
+		// Kullanıcı bulunamadı, bu normal bir durumdur, hata döndürmeyin
+		return nil, nil
+	case err != nil:
+		// Diğer tüm hataları iletmek
+		return nil, err
+	default:
+		// Kullanıcı bulundu, kullanıcıyı döndür
+		return &user, nil
+	}
+
+}
+
 func (m *PostgresDBRepo) CreateUser(user *models.User) (int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
 	// Check if email is already used
-	existingUser, err := m.GetUserByEmail(user.Email)
+	existingUserByEmail, err := m.GetUserByEmail(user.Email)
 	if err != nil {
 		return 0, err
 	}
-	if existingUser != nil {
+	if existingUserByEmail != nil {
 		return 0, errors.New("email already used")
+	}
+
+	// Check if username is already used
+	existingUserByUsername, err := m.GetUserByUserName(user.Username)
+	if err != nil {
+		return 0, err
+	}
+	if existingUserByUsername != nil {
+		return 0, errors.New("username already used")
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
@@ -244,9 +292,9 @@ func (m *PostgresDBRepo) CreateUser(user *models.User) (int, error) {
 	}
 
 	query := `
-		INSERT INTO users (username, first_name, last_name, email, password, role, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-		RETURNING id`
+        INSERT INTO users (username, first_name, last_name, email, password, role, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        RETURNING id`
 
 	var newID int
 	err = m.DB.QueryRowContext(

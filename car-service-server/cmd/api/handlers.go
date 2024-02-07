@@ -52,26 +52,32 @@ func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err := app.readJSON(w, r, &requestPayload)
-
 	if err != nil {
 		app.errorJSON(w, err, http.StatusBadRequest)
 		return
 	}
 
+	// Get user by email
 	user, err := app.DB.GetUserByEmail(requestPayload.Email)
-
 	if err != nil {
 		app.errorJSON(w, errors.New("email not found. invalid credentials"), http.StatusBadRequest)
 		return
 	}
 
-	valid, err := user.PasswordMatches(requestPayload.Password)
+	// Check if user is nil
+	if user == nil {
+		app.errorJSON(w, errors.New("user not found"), http.StatusNotFound)
+		return
+	}
 
+	// Check if password matches
+	valid, err := user.PasswordMatches(requestPayload.Password)
 	if err != nil || !valid {
 		app.errorJSON(w, errors.New("password doesn't match"), http.StatusBadRequest)
 		return
 	}
 
+	// Prepare JWT user
 	u := jwtUser{
 		ID:        user.ID,
 		FirstName: user.FirstName,
@@ -79,6 +85,7 @@ func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
 		Role:      user.Role,
 	}
 
+	// Generate token pair
 	tokens, err := app.auth.GenerateTokenPair(&u)
 	if err != nil {
 		app.errorJSON(w, err)
