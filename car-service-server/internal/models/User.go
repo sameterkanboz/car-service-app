@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"errors"
 	"time"
 
@@ -8,17 +9,17 @@ import (
 )
 
 type User struct {
-	ID           int       `json:"id"`
-	Username     string    `json:"username"`
-	FirstName    string    `json:"first_name"`
-	LastName     string    `json:"last_name"`
-	Email        string    `json:"email"`
-	Password     string    `json:"password"`
-	Role         string    `json:"role"`
-	CarID        int       `json:"car_id"`
-	Appointments string    `json:"appointments"`
-	CreatedAt    time.Time `json:"-"`
-	UpdatedAt    time.Time `json:"-"`
+	ID           int           `json:"id"`
+	Username     string        `json:"username"`
+	FirstName    string        `json:"first_name"`
+	LastName     string        `json:"last_name"`
+	Email        string        `json:"email"`
+	Password     string        `json:"password"`
+	Role         string        `json:"role"`
+	CarID        sql.NullInt64 `json:"car_id"` // Nullable CarID
+	Appointments []Appointment `json:"appointments"`
+	CreatedAt    time.Time     `json:"-"`
+	UpdatedAt    time.Time     `json:"-"`
 }
 
 func (u *User) PasswordMatches(plainText string) (bool, error) {

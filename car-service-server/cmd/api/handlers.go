@@ -61,14 +61,14 @@ func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
 	user, err := app.DB.GetUserByEmail(requestPayload.Email)
 
 	if err != nil {
-		app.errorJSON(w, errors.New("invalid credentials"), http.StatusBadRequest)
+		app.errorJSON(w, errors.New("email not found. invalid credentials"), http.StatusBadRequest)
 		return
 	}
 
 	valid, err := user.PasswordMatches(requestPayload.Password)
 
 	if err != nil || !valid {
-		app.errorJSON(w, errors.New("invalid credentials"), http.StatusBadRequest)
+		app.errorJSON(w, errors.New("password doesn't match"), http.StatusBadRequest)
 		return
 	}
 
@@ -89,6 +89,22 @@ func (app *application) authenticate(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, refreshCookie)
 
 	app.writeJSON(w, http.StatusAccepted, tokens)
+}
+
+func (app *application) CreateUser(w http.ResponseWriter, r *http.Request) {
+	var user models.User
+	err := app.readJSON(w, r, &user)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+	id, err := app.DB.CreateUser(&user)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+	log.Println("User created with ID: ", id)
+	app.writeJSON(w, http.StatusCreated, id)
 }
 
 func (app *application) refreshToken(w http.ResponseWriter, r *http.Request) {
@@ -137,9 +153,7 @@ func (app *application) refreshToken(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) logout(w http.ResponseWriter, r *http.Request) {
-	// logout user
-	// delete refresh token
-	// set cookie to expire
+
 	http.SetCookie(w, app.auth.GetExpiredRefreshCookie())
 	w.WriteHeader(http.StatusAccepted)
 }
@@ -154,19 +168,3 @@ func (app *application) AllUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 // ALL CARS, ALL APPOINTMENTS TODO
-
-func (app *application) CreateUser(w http.ResponseWriter, r *http.Request) {
-	var user models.User
-	err := app.readJSON(w, r, &user)
-	if err != nil {
-		app.errorJSON(w, err)
-		return
-	}
-	id, err := app.DB.CreateUser(&user)
-	if err != nil {
-		app.errorJSON(w, err)
-		return
-	}
-	log.Println("User created with ID: ", id)
-	app.writeJSON(w, http.StatusCreated, id)
-}

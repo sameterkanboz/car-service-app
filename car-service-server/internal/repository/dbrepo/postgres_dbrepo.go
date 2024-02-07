@@ -3,6 +3,7 @@ package dbrepo
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"server/internal/models"
 	"time"
 
@@ -182,6 +183,9 @@ func (m *PostgresDBRepo) GetUserByEmail(email string) (*models.User, error) {
 	)
 
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
 		return nil, err
 	}
 
@@ -225,6 +229,15 @@ func (m *PostgresDBRepo) CreateUser(user *models.User) (int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
+	// Check if email is already used
+	existingUser, err := m.GetUserByEmail(user.Email)
+	if err != nil {
+		return 0, err
+	}
+	if existingUser != nil {
+		return 0, errors.New("email already used")
+	}
+
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return 0, err
@@ -243,7 +256,7 @@ func (m *PostgresDBRepo) CreateUser(user *models.User) (int, error) {
 		user.FirstName,
 		user.LastName,
 		user.Email,
-		hashedPassword, // Hashlenmiş parolayı kullan
+		hashedPassword,
 		user.Role,
 		time.Now(),
 		time.Now(),
