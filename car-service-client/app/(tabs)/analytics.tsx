@@ -28,6 +28,7 @@ export default function AnalyticsScreen() {
     if (onLogin) {
       const result = await onLogin(email, password);
       setError({ message: '', error: false });
+      router.replace('/(tabs)/');
       if (result && result.error) {
         console.log(result.message);
         setError({ message: result.message, error: true });
