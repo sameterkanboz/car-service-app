@@ -1,10 +1,65 @@
-# car-service-app
+![Car Service Logo](logo.png)
+# car-service-app 
 
 Bu proje, React Native Expo kullanarak bir mobil uygulama geliştirmek ve bu uygulama için bir backend servisi sağlamak amacıyla Go, Docker ve PostgreSQL kullanmaktadır.
 
 ## Başlarken
 
+Projeyi yerel ma# car-service-app
+
+
+Bu proje, React Native Expo kullanarak bir mobil uygulama geliştirmek ve bu uygulama için bir backend servisi sağlamak amacıyla Go, Docker ve PostgreSQL kullanmaktadır.
+
+
+## Başlarken
+
+
 Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları izleyin.
+
+
+### Gereksinimler
+
+
+- Node.js ve npm
+
+- Expo CLI
+
+- Go
+
+- Docker
+
+- PostgreSQL
+
+
+### Kurulum
+
+
+1. **Mobil Uygulama**
+
+
+```bash
+
+cd car-service-client/
+
+npm install
+
+npm start
+
+```
+
+- Yukarıdaki komutları kullanarak client tarafını ayağa kaldırabilirsiniz. Eğer isterseniz npx expo run:ios komutu ile ios cihazlarda ya da npx expo run:andorid komutu ile de android cihazlarda uygulamayı ayağa kaldırabilirsiniz.
+
+
+```bash
+
+cd car-service-client/
+
+npm install
+
+npx expo run:ios
+
+
+kinenizde çalıştırmak için aşağıdaki adımları izleyin.
 
 ### Gereksinimler
 
@@ -63,4 +118,6 @@ Bu proje MIT lisansı altında lisanslanmıştır. Daha fazla bilgi için `LICEN
 
 ## İletişim
 
-Eğer herhangi bir sorunuz veya geri bildiriminiz varsa
+Eğer herhangi bir sorunuz veya geri bildiriminiz varsa lütfen benimle iletişime geçmekten çekinmeyin.
+[Twitter](https://twitter.com/sameterkanboz)
+
