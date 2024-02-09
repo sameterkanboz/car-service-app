@@ -106,6 +106,14 @@ go run ./cmd/api
 
 Mobil uygulamayı Expo CLI kullanarak çalıştırabilir ve backend servisine istekler yapabilirsiniz. Backend servisi varsayılan olarak `localhost:8080` adresinde çalışır.
 
+## Tasarım Süreci
+
+Tasarım sürecindeki sürecini canlı olarak aşağıdaki linklerden takip edebilirsiniz.
+
+[UI Design](https://www.figma.com/file/eiyLX7wlRrIAYJ6n7h7b3P/Kafein-Winter2024-SW?type=design&node-id=0%3A1&mode=design&t=GVnznzkkwryvPKKN-1)
+
+[Logo Design](https://www.figma.com/file/mC33hhVDK4o5SNIYsc3O7n/Expo-App-Icon-%26-Splash-(Community)?type=design&node-id=0%3A1&mode=design&t=NUsW3kQx6ATPpfor-1)
+
 ## Katkıda Bulunma
 
 1. Bu projeyi fork ve klonlayın.
