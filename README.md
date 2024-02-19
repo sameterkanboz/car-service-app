@@ -34,7 +34,7 @@ npm start
 
 - Yukarıdaki komutları kullanarak client tarafını ayağa kaldırabilirsiniz. Eğer isterseniz npx expo run:ios komutu ile ios cihazlarda ya da npx expo run:andorid komutu ile de android cihazlarda uygulamayı ayağa kaldırabilirsiniz.
 
-````bash
+```bash
 
 cd car-service-client/
 
@@ -60,7 +60,7 @@ npx expo run:ios
 cd car-service-client/
 npm install
 npm start
-````
+```
 
 - Yukarıdaki komutları kullanarak client tarafını ayağa kaldırabilirsiniz. Eğer isterseniz npx expo run:ios komutu ile ios cihazlarda ya da npx expo run:andorid komutu ile de android cihazlarda uygulamayı ayağa kaldırabilirsiniz.
 
