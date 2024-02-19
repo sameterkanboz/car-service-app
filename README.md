@@ -42,8 +42,7 @@ npm install
 
 npx expo run:ios
 
-
-kinenizde çalıştırmak için aşağıdaki adımları izleyin.
+```
 
 ### Gereksinimler
 
