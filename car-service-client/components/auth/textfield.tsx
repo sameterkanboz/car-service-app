@@ -39,6 +39,7 @@ export const TextField = (props: TextFieldProps) => {
         style,
       ]}>
       <TextInput
+        keyboardType={placeholder == 'email' ? 'email-address' : 'default'}
         onChangeText={onChangeText}
         placeholder={placeholder}
         value={value}

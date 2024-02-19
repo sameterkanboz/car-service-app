@@ -233,7 +233,7 @@ func (m *PostgresDBRepo) GetUserByUserName(username string) (*models.User, error
 		id, username, first_name, last_name, email, password, role, car_id, created_at, updated_at 
 	FROM 
 		users 
-	WHERE username = $1`
+	WHERE email = $1`
 
 	var user models.User
 
@@ -315,4 +315,18 @@ func (m *PostgresDBRepo) CreateUser(user *models.User) (int, error) {
 	}
 
 	return newID, nil
+}
+
+func (m *PostgresDBRepo) DeleteUser(email string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	query := `DELETE FROM users WHERE email = $1`
+
+	_, err := m.DB.ExecContext(ctx, query, email)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

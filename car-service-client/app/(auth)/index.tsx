@@ -72,7 +72,7 @@ export default function LoginScreen() {
         secureTextEntry={true}
         onChangeText={(value) => setPassword(value)}
       />
-      <CustomButton title="login" onPress={handleLogin} />
+      <CustomButton type="primary" title="login" onPress={handleLogin} />
       {error.error && <Text style={{ color: 'red' }}>{error.message}</Text>}
       {authState?.authenticated && <Button title="logout" onPress={handleLogout} />}
       <Text style={{ position: 'absolute', bottom: 96 }}>

@@ -174,4 +174,25 @@ func (app *application) AllUsers(w http.ResponseWriter, r *http.Request) {
 	_ = app.writeJSON(w, http.StatusOK, users)
 }
 
+func (app *application) GetUserByUsername(w http.ResponseWriter, r *http.Request) {
+	username := r.URL.Query().Get("email")
+	user, err := app.DB.GetUserByUserName(username)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+	_ = app.writeJSON(w, http.StatusOK, user)
+}
+
+func (app *application) DeleteUser(w http.ResponseWriter, r *http.Request) {
+	email := r.URL.Query().Get("email")
+	err := app.DB.DeleteUser(email)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+	app.writeJSON(w, http.StatusAccepted, "user deleted")
+	w.WriteHeader(http.StatusAccepted)
+}
+
 // ALL CARS, ALL APPOINTMENTS TODO

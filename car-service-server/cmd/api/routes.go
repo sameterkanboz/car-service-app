@@ -19,8 +19,10 @@ func (app *application) routes() http.Handler {
 
 	mux.Post("/authenticate", app.authenticate)
 	mux.Post("/createUser", app.CreateUser)
+	mux.Delete("/deleteUser", app.DeleteUser)
 	mux.Get("/refresh", app.refreshToken)
 	mux.Get("/logout", app.logout)
+	mux.Get("/user", app.GetUserByUsername)
 
 	mux.Get("/allAppointments", app.AllAppointments)
 	// mux.Get("allUsers", app.AllUsers)

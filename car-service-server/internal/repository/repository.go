@@ -14,4 +14,5 @@ type DatabaseRepo interface {
 	GetUserByID(id int) (*models.User, error)
 	CreateUser(user *models.User) (int, error)
 	GetUserByUserName(username string) (*models.User, error)
+	DeleteUser(email string) error
 }

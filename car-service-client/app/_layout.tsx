@@ -19,11 +19,25 @@ function StackGroup() {
           <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
         </Stack>
       );
+    case null:
+      return (
+        <Stack>
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          {/* <Stack.Screen name="modal" options={{ presentation: 'modal' }} /> */}
+        </Stack>
+      );
     case false:
       return (
         <Stack>
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+          {/* <Stack.Screen name="modal" options={{ presentation: 'modal' }} /> */}
+        </Stack>
+      );
+    case undefined:
+      return (
+        <Stack>
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          {/* <Stack.Screen name="modal" options={{ presentation: 'modal' }} /> */}
         </Stack>
       );
     default:

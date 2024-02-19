@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, Text, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useAuth } from '~/app/context/AuthContext';
@@ -13,13 +13,23 @@ const shape = `
  `;
 
 const Landing = () => {
-  const { authState } = useAuth();
+  const { user } = useAuth();
+  const [currentDate, setCurrentDate] = useState(0);
+  useEffect(() => {
+    var hours = new Date().getHours(); //Current Hours
+
+    setCurrentDate(hours);
+  }, []);
   return (
     <View>
       <View style={{ alignItems: 'center' }}>
         <View style={{ position: 'absolute', zIndex: 1, left: 32, top: 64 }}>
-          <Text style={{ fontSize: 24 }}>%%time</Text>
-          <Text style={{ fontSize: 24 }}>{}</Text>
+          {currentDate < 24 && <Text style={{ fontSize: 24 }}>Good Night</Text>}
+          {currentDate < 18 && <Text style={{ fontSize: 24 }}>Have a nice day</Text>}
+          {currentDate < 12 && <Text style={{ fontSize: 24 }}>Good Morning</Text>}
+          <Text style={{ fontSize: 24 }}>
+            {(user?.first_name ?? '') + ' ' + (user?.last_name ?? '')}!
+          </Text>
         </View>
 
         <SvgXml style={{ top: 40 }} xml={shape} />

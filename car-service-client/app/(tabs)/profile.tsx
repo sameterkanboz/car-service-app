@@ -1,6 +1,30 @@
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import CustomButton from '~/components/auth/button';
+import { useAuth } from '../context/AuthContext';
 export default function ProfileScreen() {
+  const { user, onLogout, onDeleteUser } = useAuth();
+  const handleLogout = async () => {
+    if (onLogout) {
+      const result = await onLogout();
+      router.replace('/(auth)/');
+      if (result && result.error) {
+        console.log(result.message);
+      }
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (onDeleteUser) {
+      const result = await onDeleteUser();
+      router.replace('/(auth)/');
+      if (result && result.error) {
+        console.log(result.message);
+      }
+    }
+  };
   return (
     <View style={{ alignItems: 'center', flex: 1, backgroundColor: '#f8f8f8' }}>
       <View style={{ width: '100%', marginTop: 64, alignItems: 'center' }}>
@@ -34,20 +58,57 @@ export default function ProfileScreen() {
               borderRadius: 100,
             }}
             resizeMode="cover"
-            source={require('../../assets/portrait/man.webp')}
+            source={require('../../assets/portrait/man.png')}
           />
           <View style={{ alignItems: 'center' }}>
-            <Text>Samet Erkan Boz</Text>
-            <Text>@username</Text>
+            <Text>
+              {user?.first_name} {user?.last_name}
+            </Text>
+            <Text>@{user?.username}</Text>
+            {user?.role === 'mechanic' && (
+              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                <MaterialIcons name="car-repair" size={24} color="black" />
+                <Text>Mechanic</Text>
+              </View>
+            )}
+            {user?.role === 'customer' && (
+              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                <MaterialIcons name="directions-car" size={24} color="black" />
+                <Text>Customer</Text>
+              </View>
+            )}
+            {user?.role === 'admin' && (
+              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                <MaterialIcons name="admin-panel-settings" size={24} color="black" />
+                <Text>Admin</Text>
+              </View>
+            )}
           </View>
         </View>
       </View>
-      <View style={{ height: '100%', backgroundColor: '#f8f8f8', width: '100%' }}>
+      <View
+        style={{
+          backgroundColor: '#f8f8f8',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}>
         <Text style={{ color: 'red' }}>Profile</Text>
-        <View>
-          <Text style={{ color: 'red' }}>CArs</Text>
+        <View
+          style={{
+            backgroundColor: '#f8f8f8',
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}>
+          <Text style={{ color: 'red' }}>Cars</Text>
+          <Text>{user?.car_id.Int64}</Text>
         </View>
       </View>
+      <CustomButton type="secondary" title="logout" onPress={handleLogout} />
+      <CustomButton type="error" title="delete account" onPress={handleDeleteAccount} />
     </View>
   );
 }
