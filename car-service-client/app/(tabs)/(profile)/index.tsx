@@ -3,7 +3,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import CustomButton from '~/components/auth/button';
-import { useAuth } from '../context/AuthContext';
+import Carousel from '~/components/profile/carousel';
+import { useAuth } from '../../context/AuthContext';
 export default function ProfileScreen() {
   const { user, onLogout, onDeleteUser } = useAuth();
   const handleLogout = async () => {
@@ -29,7 +30,6 @@ export default function ProfileScreen() {
     <View style={{ alignItems: 'center', flex: 1, backgroundColor: '#f8f8f8' }}>
       <View style={{ width: '100%', marginTop: 64, alignItems: 'center' }}>
         <LinearGradient
-          // Background Linear Gradient
           colors={['rgba(224, 149, 81, 1)', 'rgba(238, 210, 185, 0.6)']}
           style={styles.background}
         />
@@ -58,7 +58,7 @@ export default function ProfileScreen() {
               borderRadius: 100,
             }}
             resizeMode="cover"
-            source={require('../../assets/portrait/man.png')}
+            source={require('../../../assets/portrait/man.png')}
           />
           <View style={{ alignItems: 'center' }}>
             <Text>
@@ -86,6 +86,7 @@ export default function ProfileScreen() {
           </View>
         </View>
       </View>
+
       <View
         style={{
           backgroundColor: '#f8f8f8',
@@ -93,8 +94,8 @@ export default function ProfileScreen() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          gap: 8,
         }}>
-        <Text style={{ color: 'red' }}>Profile</Text>
         <View
           style={{
             backgroundColor: '#f8f8f8',
@@ -103,12 +104,27 @@ export default function ProfileScreen() {
             flexDirection: 'column',
             alignItems: 'center',
           }}>
-          <Text style={{ color: 'red' }}>Cars</Text>
-          <Text>{user?.car_id.Int64}</Text>
+          {/* <Text>{user?.car_id.Int64}</Text> */}
         </View>
+        <Carousel />
+        <CustomButton
+          type="primary"
+          title="settings"
+          onPress={() => router.navigate('/(profile)/settingsModal')}
+        />
+        <CustomButton
+          type="error"
+          title="delete account"
+          //  onPress={handleDeleteAccount}
+          onPress={() => router.navigate('/(profile)/deleteModal')}
+        />
+        <CustomButton
+          type="secondary"
+          title="logout"
+          //  onPress={handleLogout}
+          onPress={() => router.navigate('/(profile)/logOutModal')}
+        />
       </View>
-      <CustomButton type="secondary" title="logout" onPress={handleLogout} />
-      <CustomButton type="error" title="delete account" onPress={handleDeleteAccount} />
     </View>
   );
 }

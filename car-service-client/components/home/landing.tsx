@@ -24,11 +24,13 @@ const Landing = () => {
     <View>
       <View style={{ alignItems: 'center' }}>
         <View style={{ position: 'absolute', zIndex: 1, left: 32, top: 64 }}>
-          {currentDate < 24 && <Text style={{ fontSize: 24 }}>Good Night</Text>}
-          {currentDate < 18 && <Text style={{ fontSize: 24 }}>Have a nice day</Text>}
-          {currentDate < 12 && <Text style={{ fontSize: 24 }}>Good Morning</Text>}
+          {/* {currentDate < 24 && currentDate > 18 && <Text style={{ fontSize: 24 }}>Good Night</Text>}
+          {currentDate < 18 && currentDate > 12 && (
+            <Text style={{ fontSize: 24 }}>Have a nice day</Text>
+          )}
+          {currentDate < 12 && <Text style={{ fontSize: 24 }}>Good Morning</Text>} */}
           <Text style={{ fontSize: 24 }}>
-            {(user?.first_name ?? '') + ' ' + (user?.last_name ?? '')}!
+            Hi {(user?.first_name ?? '') + ' ' + (user?.last_name ?? '')}!
           </Text>
         </View>
 
