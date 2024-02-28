@@ -4,22 +4,30 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 interface AuthProps {
   authState?: { token: string | null; authenticated: boolean | null };
-  onRegister?: (email: string, password: string) => Promise<any>;
+  onRegister?: (props: registerProps) => Promise<any>;
   onLogin?: (email: string, password: string) => Promise<any>;
   onLogout?: () => Promise<any>;
+
   onDeleteUser?: () => Promise<any>;
   user?: User;
 }
-
+interface registerProps {
+  email: string;
+  password: string;
+  username: string;
+  first_name: string;
+  last_name: string;
+  role: string;
+}
 const TOKEN_KEY = 'my-jwt';
-export const API_URL = 'https://06f2-2a02-e0-5e7e-4600-5112-7954-58ff-3be7.ngrok-free.app';
+export const API_URL = 'https://osprey-evident-needlessly.ngrok-free.app';
 const AuthContext = createContext<AuthProps>({});
 
 export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-type UserRole = 'admin' | 'customer' | 'mechanic';
+export type UserRole = 'admin' | 'customer' | 'mechanic';
 
 type User = {
   id: number;
@@ -33,9 +41,15 @@ type User = {
     Int64: number;
     Valid: boolean;
   };
-  appointments: {} | null;
+  appointments: Appointment[] | null;
 } | null;
-
+export type Appointment = {
+  id: number;
+  car_id: number;
+  mechanic_id: number;
+  appointment_date: string;
+  appointment_type: string;
+};
 export const AuthProvider = ({ children }: { children: any }) => {
   const [authState, setAuthState] = useState<{
     token: string | null;
@@ -44,6 +58,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
     token: null,
     authenticated: null,
   });
+
   const [user, setUser] = useState<User>(null);
 
   useEffect(() => {
@@ -82,9 +97,17 @@ export const AuthProvider = ({ children }: { children: any }) => {
     }
   };
 
-  const register = async (email: string, password: string) => {
+  const register = async (props: registerProps) => {
+    const { email, password, username, first_name, last_name, role } = props;
     try {
-      return await axios.post(`${API_URL}/authenticate`, { email, password });
+      return await axios.post(`${API_URL}/createUser`, {
+        email,
+        password,
+        username,
+        first_name,
+        last_name,
+        role,
+      });
     } catch (error) {
       return { error: true, message: (error as any).response.data.message };
     }

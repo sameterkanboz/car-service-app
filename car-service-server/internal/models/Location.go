@@ -1,12 +1,9 @@
 package models
 
 type Location struct {
-	ID              int     `json:"id"`
-	Name            string  `json:"name"`
-	Longtitude      float64 `json:"longtitude"`
-	Latitude        float64 `json:"latitude"`
-	LatitudeDelta   float64 `json:"latitude_delta"`
-	LongtitudeDelta float64 `json:"longtitude_delta"`
-	CreatedAt       string  `json:"created_at"`
-	UpdatedAt       string  `json:"updated_at"`
+	Name           string  `json:"name"`
+	Latitude       float64 `json:"latitude"`
+	Longitude      float64 `json:"longitude"`
+	LatitudeDelta  float64 `json:"latitudeDelta"`
+	LongitudeDelta float64 `json:"longitudeDelta"`
 }

@@ -1,17 +1,6 @@
 import { Text, View } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 
-// type Appointments = {
-//   appointment_type: number;
-//   appointment_date: string;
-//   appointment_status: string;
-//   car_id: number;
-//   created_at: string;
-//   updated_at: string;
-//   id: number;
-//   customer_id: number;
-//   mechanic_id: number;
-// };
 export default function AnalyticsScreen() {
   const { user } = useAuth();
   return (

@@ -67,7 +67,7 @@ func (m *PostgresDBRepo) AllTodos() ([]*models.ToDo, error) {
 }
 
 func (m *PostgresDBRepo) AllUsers() ([]*models.User, error) {
-
+	//MAYBE LOCATION TO_DO
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 
@@ -230,7 +230,7 @@ func (m *PostgresDBRepo) GetUserByUserName(username string) (*models.User, error
 	defer cancel()
 	query := `
 	SELECT 
-		id, username, first_name, last_name, email, password, role, car_id, created_at, updated_at 
+		id, username, first_name, last_name, email, password, role, car_id, appointments,created_at, updated_at 
 	FROM 
 		users 
 	WHERE email = $1`
@@ -247,6 +247,7 @@ func (m *PostgresDBRepo) GetUserByUserName(username string) (*models.User, error
 		&user.Password,
 		&user.Role,
 		&user.CarID,
+		&user.Appointments,
 		&user.CreatedAt,
 		&user.UpdatedAt,
 	)
@@ -329,4 +330,52 @@ func (m *PostgresDBRepo) DeleteUser(email string) error {
 	}
 
 	return nil
+}
+
+func (m *PostgresDBRepo) GetAllMechanics() ([]*models.User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	defer cancel()
+
+	query := `
+        SELECT
+            id, username, email, role, first_name, last_name, car_id, appointments, location, created_at, updated_at
+        FROM
+            users
+        WHERE
+            role = 'mechanic'
+        ORDER BY
+            id
+    `
+
+	rows, err := m.DB.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var users []*models.User
+
+	for rows.Next() {
+		var user models.User
+		err := rows.Scan(
+			&user.ID,
+			&user.Username,
+			&user.Email,
+			&user.Role,
+			&user.FirstName,
+			&user.LastName,
+			&user.CarID,
+			&user.Appointments,
+			&user.Location,
+			&user.CreatedAt,
+			&user.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, &user)
+	}
+
+	return users, nil
 }

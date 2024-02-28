@@ -195,4 +195,13 @@ func (app *application) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusAccepted)
 }
 
+func (app *application) GetAllMechanics(w http.ResponseWriter, r *http.Request) {
+	mechanics, err := app.DB.GetAllMechanics()
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+	_ = app.writeJSON(w, http.StatusOK, mechanics)
+}
+
 // ALL CARS, ALL APPOINTMENTS TODO

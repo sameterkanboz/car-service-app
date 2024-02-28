@@ -1,25 +1,26 @@
 import 'core-js/stable/atob';
 import { Text, View } from 'react-native';
+import MultipleSelector from '~/components/appointments/MultipleSelector/MultipleSelector';
 import { useAuth } from '../context/AuthContext';
 export default function AppointmentsScreen() {
-  type PayloadType = {
-    aud: string;
-    exp: number;
-    iat: number;
-    iss: string;
-    name: string;
-    role: string;
-    sub: string;
-    typ: string;
-  };
-
-  const { authState, user } = useAuth();
+  const { user } = useAuth();
 
   return (
     <View className={styles.container}>
       <Text className={styles.title}>Appointments</Text>
-      <Text>Appointments Screen</Text>
-      <Text>{JSON.stringify(user?.appointments)}</Text>
+
+      {user &&
+        user.appointments &&
+        user.appointments.map((appointment, index) => {
+          return (
+            <MultipleSelector
+              key={index}
+              label={appointment.appointment_type}
+              items={user.appointments && user.appointments[index]}
+            />
+          );
+        })}
+      {/* <MultipleSelector label="Appointments" items={user?.appointments || []} /> */}
       <View className={styles.separator} />
     </View>
   );

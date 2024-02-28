@@ -36,18 +36,25 @@ export default function RegisterScreen() {
     error: false,
   });
   console.log(userType, 'userType');
-  const { onLogin, authState, onLogout } = useAuth();
+  const { authState, onLogout, onRegister } = useAuth();
 
-  const handleLogin = async () => {
-    if (onLogin) {
-      const result = await onLogin(email, password);
+  const handleRegister = async () => {
+    if (onRegister) {
+      const result = await onRegister({
+        username: username,
+        first_name: name.first_name,
+        last_name: name.last_name,
+        email: email,
+        password: password,
+        role: userType,
+      });
       setError({ message: '', error: false });
 
       if (result && result.error) {
         console.log(result.message);
         setError({ message: result.message, error: true });
       } else {
-        router.replace('/(tabs)/');
+        router.replace('/(auth)/');
       }
     }
   };
@@ -131,7 +138,7 @@ export default function RegisterScreen() {
         secureTextEntry={true}
         onChangeText={(value) => setRePassword(value)}
       />
-      <CustomButton type="primary" title="login" onPress={handleLogin} />
+      <CustomButton type="primary" title="register" onPress={handleRegister} />
       {error.error && <Text style={{ color: 'red' }}>{error.message}</Text>}
       {authState?.authenticated && <Button title="logout" onPress={handleLogout} />}
       <Text style={{ position: 'absolute', bottom: 96 }}>

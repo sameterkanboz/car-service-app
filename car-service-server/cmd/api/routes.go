@@ -23,7 +23,7 @@ func (app *application) routes() http.Handler {
 	mux.Get("/refresh", app.refreshToken)
 	mux.Get("/logout", app.logout)
 	mux.Get("/user", app.GetUserByUsername)
-
+	mux.Get("/search", app.GetAllMechanics)
 	mux.Get("/allAppointments", app.AllAppointments)
 	// mux.Get("allUsers", app.AllUsers)
 	mux.Route("/admin", func(mux chi.Router) {

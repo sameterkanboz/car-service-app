@@ -2,8 +2,6 @@ import { router } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Dialog from '~/components/profile/dialog';
 
-type ModalTypes = 'delete' | 'settings' | 'logout';
-
 export default function ModalScreen() {
   return (
     <View

@@ -4,11 +4,15 @@ import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-nat
 const Carousel = () => {
   const [imgActive, setImageActive] = useState(0);
   const WindowWidth = Dimensions.get('window').width;
-  const height = Dimensions.get('window').height;
   const image = [
     { name: 'mercedes', image: require('../../assets/cars/mercedes.png') },
     { name: 'egea', image: require('../../assets/cars/egea.png') },
     { name: 'corolla', image: require('../../assets/cars/corolla.png') },
+    { name: 'audi', image: require('../../assets/cars/audi.png') },
+    { name: 'passat', image: require('../../assets/cars/passat.png') },
+    { name: 'polo', image: require('../../assets/cars/polo.png') },
+    { name: 'doblo', image: require('../../assets/cars/doblo.png') },
+    { name: 'symbol', image: require('../../assets/cars/symbol.png') },
   ];
   const onchange = (nativeEvent: {
     contentOffset: { x: number };

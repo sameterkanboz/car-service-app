@@ -65,6 +65,9 @@ export default function ProfileScreen() {
               {user?.first_name} {user?.last_name}
             </Text>
             <Text>@{user?.username}</Text>
+            {/* <Pressable onPress={handleLogout}>
+              <Text>bas</Text>
+            </Pressable> */}
             {user?.role === 'mechanic' && (
               <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 4 }}>
                 <MaterialIcons name="car-repair" size={24} color="black" />

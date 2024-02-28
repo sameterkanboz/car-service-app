@@ -35,6 +35,7 @@ CREATE TABLE public.users (
     last_name VARCHAR(255),
     car_id INTEGER REFERENCES public.cars(id),
     appointments JSONB,
+    location JSONB, -- Location data for mechanics
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -47,11 +48,16 @@ INSERT INTO public.appointments (customer_id, mechanic_id, car_id, appointment_d
     (3, 2, 3, '2024-02-20 13:00:00', 'Tire Rotation');
 
 INSERT INTO public.cars (model, brand, type, year, color, plate, issues) VALUES
-    ('Camry', 'Toyota', 'Sedan', 2018, 'Red', 'ABC123', '["Engine problem", "Color issue"]'),
-    ('Accord', 'Honda', 'Sedan', 2020, 'Blue', 'DEF456', '["Brake problem", "Alignment issue"]'),
-    ('Fusion', 'Ford', 'Sedan', 2019, 'Black', 'GHI789', '["Tire issue", "AC problem"]');
+    ('CLA200', 'Mercedes', 'Sedan', 2018, 'Black', 'ABC123', '["Engine problem", "Color issue"]'),
+    ('Egea', 'Fiat', 'Cross', 2020, 'Orange', 'DEF456', '["Brake problem", "Alignment issue"]'),
+    ('Corolla', 'Toyota', 'Sedan', 2019, 'Black', 'GHI789', '["Tire issue", "AC problem", "Engine Prob"]'),
+    ('A8', 'Audi', 'Sedan', 2017, 'White', 'JKL101', '["Engine problem", "Color issue"]'),
+    ('Passat', 'Volkswagen', 'Sedan', 2016, 'Black', 'MNO112', '["Brake problem", "Alignment issue"]'),
+    ('Polo', 'Volkswagen', 'Hatchback', 2015, 'Red', 'PQR113', '["Tire issue", "AC problem"]'),
+    ('Doblo', 'Fiat', 'Panelvan', 2015, 'Grey', 'PQR114', '["Tire issue", "AC problem","Alignment issue"]'),
+    ('Symbol', 'Renault', 'Sedan', 2015, 'White', 'PQR115', '["Tire issue", "AC problem", "Engine"]');
 
-INSERT INTO public.users (username, email, password, role, first_name, last_name, car_id, appointments) VALUES
-    ('customer1', 'customer1@example.com', '$2a$14$wVsaPvJnJJsomWArouWCtusem6S/.Gauq/GjOIEHpyh2DAMmso1wy', 'customer', 'John', 'Doe', 1, '[{"id": 1, "mechanic_id": 2, "car_id": 1, "appointment_date": "2024-02-10T09:00:00", "appointment_type": "Oil Change"}]'),
-    ('mechanic1', 'mechanic1@example.com', '$2a$14$wVsaPvJnJJsomWArouWCtusem6S/.Gauq/GjOIEHpyh2DAMmso1wy', 'mechanic', NULL, NULL, NULL, '[{"id": 1, "customer_id": 1, "car_id": 1, "appointment_date": "2024-02-10T09:00:00", "appointment_type": "Oil Change"}]'),
-    ('admin', 'admin@example.com', '$2a$14$wVsaPvJnJJsomWArouWCtusem6S/.Gauq/GjOIEHpyh2DAMmso1wy', 'admin', NULL, NULL, NULL, NULL);
+INSERT INTO public.users (username, email, password, role, first_name, last_name, car_id, appointments, location) VALUES
+    ('customer1', 'customer1@example.com', '$2a$14$wVsaPvJnJJsomWArouWCtusem6S/.Gauq/GjOIEHpyh2DAMmso1wy', 'customer', 'Customer', 'Doe', 1, '[{"id": 1, "mechanic_id": 2, "car_id": 1, "appointment_date": "2024-02-10T09:00:00", "appointment_type": "Oil Change"}]', NULL),
+    ('mechanic1', 'mechanic1@example.com', '$2a$14$wVsaPvJnJJsomWArouWCtusem6S/.Gauq/GjOIEHpyh2DAMmso1wy', 'mechanic', 'Mechanic', 'Doe', 2, '[{"id": 1, "customer_id": 1, "car_id": 1, "appointment_date": "2024-02-10T09:00:00", "appointment_type": "Oil Change"}]', '{"name": "Avcılar Oto Tamir", "latitude": 41.012311, "longitude": 28.699072, "latitudeDelta": 0.5, "longitudeDelta": 0.5}'),
+('admin', 'admin@example.com', '$2a$14$wVsaPvJnJJsomWArouWCtusem6S/.Gauq/GjOIEHpyh2DAMmso1wy', 'admin', 'Admin', 'Admin', NULL, NULL, NULL);
