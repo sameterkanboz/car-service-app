@@ -6,8 +6,16 @@ export default function AppointmentsScreen() {
   const { user } = useAuth();
 
   return (
-    <View className={styles.container}>
-      <Text className={styles.title}>Appointments</Text>
+    <View
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        flex: 1,
+        marginTop: 96,
+      }}>
+      <Text style={{ fontWeight: 'bold', fontSize: 28 }}>Appointments</Text>
 
       {user &&
         user.appointments &&
@@ -21,13 +29,6 @@ export default function AppointmentsScreen() {
           );
         })}
       {/* <MultipleSelector label="Appointments" items={user?.appointments || []} /> */}
-      <View className={styles.separator} />
     </View>
   );
 }
-
-const styles = {
-  container: `items-center flex-1 justify-center`,
-  separator: `h-[1px] my-7 w-4/5 bg-gray-200`,
-  title: `text-xl font-bold`,
-};

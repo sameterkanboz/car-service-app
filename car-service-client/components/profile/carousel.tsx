@@ -25,6 +25,7 @@ const Carousel = () => {
       }
     }
   };
+
   return (
     <View style={styles.Container}>
       <ScrollView
